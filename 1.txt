@@ -1,0 +1,135 @@
+const crypto = require('crypto')
+ const initBlock = {
+    index: 0,
+    data: 'hello tyxblockchain!',
+    prevHash: '0',
+    timestamp: 1693801671206,
+    nonce: 256,
+    hash: '00dc79e204bd829d901d688916b5be33c6019e1f7cd0894baf36dac55785de7c'
+
+ }
+class Blockchain {
+    constructor() {
+        this.blockchain = [
+            initBlock
+        ]
+        this.data = []
+        this.difficulty = 2
+        // const hash = this.computeHash(0,'0',new Date().getTime(),'Hello zjcblockchain!',1)
+        // console.log(hash)
+    }
+
+    mine() {
+        //逻辑:1.生成新区块 一页新的账本加入了区块链
+        // 2.谁来记账 ? 不停计算哈希, 直到计算出符合条件的哈希值, 获得记账权
+        // 先计算出创世区块
+        // let nonce = 0//随机数
+        // const index = 0//区块索引值
+        // const data = 'hello tyxblockchain!'//区块数据
+        // const prevHash = '0'//创世区块的上个区块哈希为0
+        // let timestamp = 1693801671206//获取当前时间戳,直接用之前计算的时间戳
+        // let hash = this.computeHash(index, prevHash, timestamp, data, nonce)
+        // while(hash.slice(0,this.difficulty) !== '0'.repeat(this.difficulty)){
+        //     nonce += 1
+        //     hash = this.computeHash(index, prevHash, timestamp, data, nonce)
+        //     // console.log(nonce, hash)//每次计算都输出看下过程
+        // }
+        // console.log('mine over',{
+        //     index,
+        //     data,
+        //     prevHash,
+        //     timestamp,
+        //     nonce,
+        //     hash
+        // })
+        const newBlock = this.generateNewBlock()
+        if (this.isValidBlock(newBlock) && this.isValidChain()) {
+            this.blockchain.push(newBlock)
+        } else {
+            console.log('区块无效,挖矿失败', newBlock)
+        }
+    }
+
+    getLastBlock() {
+        return this.blockchain[this.blockchain.length - 1]
+    }
+
+    generateNewBlock() {
+        let nonce = 0//随机数
+        const index = this.blockchain.length//区块索引值
+        const data = this.data
+        const prevHash = this.getLastBlock().hash//创世区块的上个区块哈希为0
+        let timestamp = new Date().getTime()//获取当前时间戳
+        let hash = this.computeHash(index, prevHash, timestamp, data, nonce)
+        while (hash.slice(0, this.difficulty) !== '0'.repeat(this.difficulty)) {
+            nonce += 1
+            hash = this.computeHash(index, prevHash, timestamp, data, nonce)
+            console.log(nonce, hash)//每次计算都输出看下过程
+        }
+        return {
+            index,
+            data,
+            prevHash,
+            timestamp,
+            nonce,
+            hash
+        }
+    }
+    computeHash(index, prevHash, timestamp, data, nonce) {
+
+        return crypto
+            .createHash('sha256')
+            .update(index + prevHash + timestamp + data + nonce)
+            .digest('hex')
+
+    }
+    computeHashForBlock({ index, prevHash, timestamp, data, nonce }) {
+        return this.computeHash(index, prevHash, timestamp, data, nonce)
+    }
+    isValidBlock(newBlock, lastBlock = this.getLastBlock()) {
+        //新区块的index = 最后区块index + 1
+        if (newBlock.index !== lastBlock.index + 1) {
+            console.log('区块索引无效');
+            return false;
+        } else if (newBlock.timestamp <= lastBlock.timestamp) {
+            console.log('区块时间戳无效');
+            // 新区块的时间戳timestamp > 最后区块的
+            return false;
+        } else if (newBlock.prevHash !== lastBlock.hash) {
+            console.log('区块上个哈希无效');
+            // 新区块的prevHash = 最后区块的hash，确保新区块链接到区块链上的最后一个区块。
+            return false;
+        } else if (newBlock.hash.slice(0, this.difficulty) !== '0'.repeat(this.difficulty)) {
+            console.log('区块哈希无效');
+            // 新区块的哈希值 符合难度要求
+            return false;
+        } else if (newBlock.hash !== this.computeHashForBlock(newBlock)) {
+            console.log('区块哈希计算无效');
+            //校验nonce，新区块的哈希值是通过计算得出的，确保新区块的哈希值是正确计算的。
+            return false;
+        }
+        return true;
+    }
+
+    //校验区块链
+    isValidChain(chain = this.blockchain) {
+        //循环遍历区块链(倒序),校验每个区块0
+        for (let i = chain.length - 1; i >= 1; i--) {
+            if (!this.isValidBlock(chain[i], chain[i - 1])) {
+                return false
+            }
+
+        }
+        if (JSON.stringify(chain[0]) !== JSON.stringify(initBlock)) {
+            return false
+        }
+        return true
+    }
+
+}
+let bc = new Blockchain()
+bc.mine()
+bc.mine()
+bc.mine()
+console.log(bc.blockchain)
+console.log("区块链校验结果：", bc.isValidChain())
