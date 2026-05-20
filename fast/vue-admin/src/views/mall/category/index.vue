@@ -42,7 +42,7 @@
 
 <script setup>
 import {onMounted, ref} from 'vue'
-import {listCategory} from "@/api/mall/category.js";
+import {getCategory, listCategory} from "@/api/mall/category.js";
 import Pagination from "@/components/Pagination/index.vue";
 
 //搜索表单实例
@@ -129,8 +129,11 @@ const getList = () => {
 }
 
 //组件挂载完成后执行
+//组件挂载完成后执行
 onMounted(() => {
   getList()
+
+
 })
 </script>
 

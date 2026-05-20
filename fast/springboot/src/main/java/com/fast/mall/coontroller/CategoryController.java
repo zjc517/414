@@ -3,9 +3,11 @@ package com.fast.mall.coontroller;
 import com.fast.mall.domain.Category;
 import com.fast.mall.service.ICategoryService;
 import com.fast.system.general.core.controller.BaseController;
+import com.fast.system.general.core.domain.AjaxResult;
 import com.fast.system.general.core.page.TableDataInfo;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,5 +30,13 @@ public class CategoryController extends BaseController {
         startPage();
         List<Category> list = categoryService.selectCategoryList(category);
         return getDataTable(list);
+    }
+    /**
+     * 获取图书分类详细信息
+     */
+    @GetMapping("/{categoryId}")
+    public AjaxResult selectCategoryByCategoryId(@PathVariable String categoryId) {
+        Category category = categoryService.selectCategoryByCategoryId(categoryId);
+        return success(category);
     }
 }

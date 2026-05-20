@@ -21,4 +21,11 @@
         order by sort
     </select>
 
+    <!--获取图书分类详细信息-->
+    <select id="selectCategoryByCategoryId" parameterType="String" resultMap="CategoryResult">
+        select category_id, name, sort
+        from category
+        where category_id = #{categoryId}
+    </select>
+
 </mapper>

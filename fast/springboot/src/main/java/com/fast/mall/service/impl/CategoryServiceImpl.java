@@ -24,4 +24,13 @@ public class CategoryServiceImpl implements ICategoryService {
     public List<Category> selectCategoryList(Category category) {
         return categoryMapper.selectCategoryList(category);
     }
+    /**
+     * 获取图书分类详细信息
+     * @param categoryId 图书分类主键
+     * @return 图书分类
+     */
+    @Override
+    public Category selectCategoryByCategoryId(String categoryId) {
+        return categoryMapper.selectCategoryByCategoryId(categoryId);
+    }
 }

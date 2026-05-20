@@ -8,3 +8,9 @@ export function listCategory(query) {
         params: query
     })
 }
+export function getCategory(categoryId) {
+    return request({
+        url: '/mall/category/' + categoryId,
+        method: 'get'
+    })
+}
