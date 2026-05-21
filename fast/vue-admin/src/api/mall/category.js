@@ -14,3 +14,12 @@ export function getCategory(categoryId) {
         method: 'get'
     })
 }
+
+// 新增图书分类
+export function addCategory(data) {
+    return request({
+        url: '/mall/category',
+        method: 'post',
+        data: data
+    })
+}

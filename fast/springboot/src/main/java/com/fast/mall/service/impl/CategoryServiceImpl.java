@@ -7,6 +7,7 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 图书分类Service业务层处理
@@ -32,5 +33,17 @@ public class CategoryServiceImpl implements ICategoryService {
     @Override
     public Category selectCategoryByCategoryId(String categoryId) {
         return categoryMapper.selectCategoryByCategoryId(categoryId);
+    }
+
+    /**
+     * 新增图书分类
+     * @param category 图书分类
+     * @return 结果
+     */
+    @Override
+    public int insertCategory(Category category) {
+        //生成一个UUID并插入至对象中
+        category.setCategoryId(String.valueOf(UUID.randomUUID()));
+        return categoryMapper.insertCategory(category);
     }
 }

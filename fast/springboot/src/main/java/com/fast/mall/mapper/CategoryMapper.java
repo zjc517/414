@@ -23,4 +23,11 @@ public interface CategoryMapper {
      * @return 图书分类
      */
     Category selectCategoryByCategoryId(String categoryId);
+
+    /**
+     * 新增图书分类
+     * @param category 图书分类
+     * @return 结果
+     */
+    int insertCategory(Category category);
 }

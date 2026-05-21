@@ -28,4 +28,19 @@
         where category_id = #{categoryId}
     </select>
 
+    <!--新增图书分类-->
+    <insert id="insertCategory" parameterType="Category">
+        insert into category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="categoryId != null">category_id,</if>
+            <if test="name != null">name,</if>
+            <if test="sort != null">sort,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="categoryId != null">#{categoryId},</if>
+            <if test="name != null">#{name},</if>
+            <if test="sort != null">#{sort},</if>
+        </trim>
+    </insert>
+
 </mapper>

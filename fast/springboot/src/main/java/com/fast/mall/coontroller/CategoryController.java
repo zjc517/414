@@ -6,10 +6,7 @@ import com.fast.system.general.core.controller.BaseController;
 import com.fast.system.general.core.domain.AjaxResult;
 import com.fast.system.general.core.page.TableDataInfo;
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -38,5 +35,12 @@ public class CategoryController extends BaseController {
     public AjaxResult selectCategoryByCategoryId(@PathVariable String categoryId) {
         Category category = categoryService.selectCategoryByCategoryId(categoryId);
         return success(category);
+    }
+    /**
+     * 新增图书分类
+     */
+    @PostMapping
+    public AjaxResult insertCategory(@RequestBody Category category) {
+        return toAjax(categoryService.insertCategory(category));
     }
 }
