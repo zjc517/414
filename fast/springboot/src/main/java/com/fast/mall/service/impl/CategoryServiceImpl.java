@@ -46,4 +46,13 @@ public class CategoryServiceImpl implements ICategoryService {
         category.setCategoryId(String.valueOf(UUID.randomUUID()));
         return categoryMapper.insertCategory(category);
     }
+    /**
+     * 修改图书分类
+     * @param category 图书分类
+     * @return 结果
+     */
+    @Override
+    public int updateCategory(Category category) {
+        return categoryMapper.updateCategory(category);
+    }
 }

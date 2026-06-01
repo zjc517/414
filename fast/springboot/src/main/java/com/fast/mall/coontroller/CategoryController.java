@@ -43,4 +43,12 @@ public class CategoryController extends BaseController {
     public AjaxResult insertCategory(@RequestBody Category category) {
         return toAjax(categoryService.insertCategory(category));
     }
+    /**
+     * 修改图书分类
+     */
+    @PutMapping
+    public AjaxResult updateCategory(@RequestBody Category category) {
+        return toAjax(categoryService.updateCategory(category));
+    }
 }
+

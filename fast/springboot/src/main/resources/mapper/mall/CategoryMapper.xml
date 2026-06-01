@@ -43,4 +43,14 @@
         </trim>
     </insert>
 
+    <!--修改图书分类-->
+    <update id="updateCategory" parameterType="Category">
+        update category
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="sort != null">sort = #{sort},</if>
+        </trim>
+        where category_id = #{categoryId}
+    </update>
+
 </mapper>

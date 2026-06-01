@@ -23,3 +23,12 @@ export function addCategory(data) {
         data: data
     })
 }
+
+// 修改图书分类
+export function updateCategory(data) {
+    return request({
+        url: '/mall/category',
+        method: 'put',
+        data: data
+    })
+}

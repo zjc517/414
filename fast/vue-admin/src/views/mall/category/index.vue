@@ -24,6 +24,15 @@
         >新增
         </el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button type="success"
+                   plain
+                   icon="Edit"
+                   :disabled="single"
+                   @click="handleUpdate"
+        >修改
+        </el-button>
+      </el-col>
     </el-row>
 
     <!-- 表格 -->
@@ -36,7 +45,7 @@
       <el-table-column label="排序" prop="sort" align="center"/>
       <el-table-column label="操作" align="center">
         <template #default="scope">
-          <el-button link type="primary" icon="Edit" @click="">修改</el-button>
+          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button link type="primary" icon="Delete" @click="">删除</el-button>
         </template>
       </el-table-column>
@@ -70,7 +79,7 @@
 
 <script setup>
 import {onMounted, ref} from 'vue'
-import {getCategory, listCategory,addCategory} from "@/api/mall/category.js";
+import {addCategory, getCategory, listCategory, updateCategory} from "@/api/mall/category.js";
 import Pagination from "@/components/Pagination/index.vue";
 import {ElMessage} from "element-plus";
 
@@ -124,6 +133,17 @@ const handleAdd = () => {
   title.value = '添加图书分类'
 }
 
+//修改按钮
+const handleUpdate = (row) => {
+  reset()
+  const categoryId = row.categoryId || ids.value
+  getCategory(categoryId).then(res => {
+    form.value = res.data
+    open.value = true
+    title.value = '修改图书分类'
+  })
+}
+
 //表单重置
 const reset = () => {
   form.value = {
@@ -148,6 +168,11 @@ const submitForm = () => {
     if (valid) {
       if (form.value.categoryId != null) {
         //修改时提交
+        updateCategory(form.value).then(res => {
+          ElMessage.success('修改成功')
+          open.value = false
+          getList()
+        })
       } else {
         //新增时提交
         addCategory(form.value).then(res => {

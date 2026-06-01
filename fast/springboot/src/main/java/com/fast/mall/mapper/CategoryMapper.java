@@ -30,4 +30,11 @@ public interface CategoryMapper {
      * @return 结果
      */
     int insertCategory(Category category);
+
+    /**
+     * 修改图书分类
+     * @param category 图书分类
+     * @return 结果
+     */
+    int updateCategory(Category category);
 }
