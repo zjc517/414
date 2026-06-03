@@ -50,5 +50,13 @@ public class CategoryController extends BaseController {
     public AjaxResult updateCategory(@RequestBody Category category) {
         return toAjax(categoryService.updateCategory(category));
     }
+
+    /**
+     * 删除图书分类
+     */
+    @DeleteMapping("/{categoryIds}")
+    public AjaxResult remove(@PathVariable String[] categoryIds) {
+        return toAjax(categoryService.deleteCategoryByCategoryIds(categoryIds));
+    }
 }
 

@@ -37,4 +37,11 @@ public interface CategoryMapper {
      * @return 结果
      */
     int updateCategory(Category category);
+
+    /**
+     * 批量删除图书分类
+     * @param categoryIds 需要删除的图书分类ID集合
+     * @return 结果
+     */
+    int deleteCategoryByCategoryIds(String[] categoryIds);
 }

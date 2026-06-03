@@ -55,4 +55,14 @@ public class CategoryServiceImpl implements ICategoryService {
     public int updateCategory(Category category) {
         return categoryMapper.updateCategory(category);
     }
+
+    /**
+     * 批量删除图书分类
+     * @param categoryIds 需要删除的图书分类ID集合
+     * @return 结果
+     */
+    @Override
+    public int deleteCategoryByCategoryIds(String[] categoryIds) {
+        return categoryMapper.deleteCategoryByCategoryIds(categoryIds);
+    }
 }

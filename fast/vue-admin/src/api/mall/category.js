@@ -32,3 +32,11 @@ export function updateCategory(data) {
         data: data
     })
 }
+
+// 删除图书分类
+export function delCategory(categoryId) {
+    return request({
+        url: '/mall/category/' + categoryId,
+        method: 'delete'
+    })
+}

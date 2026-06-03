@@ -53,4 +53,12 @@
         where category_id = #{categoryId}
     </update>
 
+    <!--批量删除图书分类-->
+    <delete id="deleteCategoryByCategoryIds" parameterType="String">
+        delete from category where category_id in
+        <foreach collection="array" item="categoryId" open="(" separator="," close=")">
+            #{categoryId}
+        </foreach>
+    </delete>
+
 </mapper>

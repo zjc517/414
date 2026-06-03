@@ -33,7 +33,19 @@
         >修改
         </el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button type="danger"
+                   plain
+                   icon="Delete"
+                   :disabled="multiple"
+                   @click="handleDelete"
+        >删除
+        </el-button>
+      </el-col>
     </el-row>
+
+
+
 
     <!-- 表格 -->
     <el-table :data="categoryList" ref="tableRef" highlight-current-row
@@ -46,7 +58,7 @@
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button link type="primary" icon="Delete" @click="">删除</el-button>
+          <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -79,9 +91,9 @@
 
 <script setup>
 import {onMounted, ref} from 'vue'
-import {addCategory, getCategory, listCategory, updateCategory} from "@/api/mall/category.js";
+import {addCategory, delCategory, getCategory, listCategory, updateCategory} from "@/api/mall/category.js";
 import Pagination from "@/components/Pagination/index.vue";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 
 //搜索表单实例
 const queryRef = ref()
@@ -142,6 +154,26 @@ const handleUpdate = (row) => {
     open.value = true
     title.value = '修改图书分类'
   })
+}
+
+//删除按钮
+const handleDelete = (row) => {
+  const categoryIds = row.categoryId || ids.value
+  ElMessageBox.confirm(
+      '是否确认删除该项数据?',
+      '系统提示',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+  )
+      .then(() => {
+        delCategory(categoryIds).then(res => {
+          getList()
+          ElMessage.success('删除成功')
+        })
+      })
 }
 
 //表单重置
