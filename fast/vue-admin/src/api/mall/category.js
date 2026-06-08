@@ -40,3 +40,11 @@ export function delCategory(categoryId) {
         method: 'delete'
     })
 }
+
+// 查询所有分类
+export function selectAllCategory() {
+    return request({
+        url: '/mall/category/selectAllCategory',
+        method: 'get'
+    })
+}

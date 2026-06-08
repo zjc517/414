@@ -1,6 +1,7 @@
-package com.fast.mall.coontroller;
+package com.fast.mall.controller;
 
 import com.fast.mall.domain.Category;
+import com.fast.mall.domain.vo.CategoryVO;
 import com.fast.mall.service.ICategoryService;
 import com.fast.system.general.core.controller.BaseController;
 import com.fast.system.general.core.domain.AjaxResult;
@@ -57,6 +58,15 @@ public class CategoryController extends BaseController {
     @DeleteMapping("/{categoryIds}")
     public AjaxResult remove(@PathVariable String[] categoryIds) {
         return toAjax(categoryService.deleteCategoryByCategoryIds(categoryIds));
+    }
+
+    /**
+     * 查询所有分类
+     */
+    @GetMapping("/selectAllCategory")
+    public AjaxResult selectAllCategory() {
+        List<CategoryVO> list = categoryService.selectAllCategory();
+        return success(list);
     }
 }
 

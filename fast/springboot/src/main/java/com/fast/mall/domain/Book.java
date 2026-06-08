@@ -42,5 +42,8 @@ public class Book
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
+    //图书分类
+    private String name;
+
 
 }

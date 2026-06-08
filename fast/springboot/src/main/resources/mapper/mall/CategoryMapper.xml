@@ -61,4 +61,11 @@
         </foreach>
     </delete>
 
+    <!--查询所有分类-->
+    <select id="selectAllCategory" resultType="com.fast.mall.domain.vo.CategoryVO">
+        select category_id as categoryId, name
+        from category
+        order by sort
+    </select>
+
 </mapper>

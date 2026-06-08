@@ -1,6 +1,7 @@
 package com.fast.mall.service;
 
 import com.fast.mall.domain.Category;
+import com.fast.mall.domain.vo.CategoryVO;
 
 import java.util.List;
 
@@ -42,4 +43,10 @@ public interface ICategoryService {
      * @return 结果
      */
     int deleteCategoryByCategoryIds(String[] categoryIds);
+
+    /**
+     * 查询所有分类
+     * @return 所有分类列表
+     */
+    List<CategoryVO> selectAllCategory();
 }

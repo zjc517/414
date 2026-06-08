@@ -1,6 +1,7 @@
 package com.fast.mall.service.impl;
 
 import com.fast.mall.domain.Category;
+import com.fast.mall.domain.vo.CategoryVO;
 import com.fast.mall.mapper.CategoryMapper;
 import com.fast.mall.service.ICategoryService;
 import jakarta.annotation.Resource;
@@ -64,5 +65,14 @@ public class CategoryServiceImpl implements ICategoryService {
     @Override
     public int deleteCategoryByCategoryIds(String[] categoryIds) {
         return categoryMapper.deleteCategoryByCategoryIds(categoryIds);
+    }
+
+    /**
+     * 查询所有分类
+     * @return 所有分类列表
+     */
+    @Override
+    public List<CategoryVO> selectAllCategory() {
+        return categoryMapper.selectAllCategory();
     }
 }

@@ -2,13 +2,14 @@
   <div class="app-container">
     <!-- 顶部搜索 -->
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="分类ID" prop="categoryId">
-        <el-input
-          v-model="queryParams.categoryId"
-          placeholder="请输入分类ID"
-          clearable
-          @keyup.enter="handleQuery"
-        />
+        <el-form-item label="图书分类" prop="categoryId">
+          <el-select style="width: 200px;" v-model="queryParams.categoryId" placeholder="请选择图书分类">
+            <el-option v-for="category in categoryList"
+                       :key="category.categoryId"
+                       :label="category.name"
+                       :value="category.categoryId"
+            />
+          </el-select>
       </el-form-item>
       <el-form-item label="书名" prop="title">
         <el-input
@@ -68,8 +69,7 @@
               border v-loading="loading" :data="bookList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" align="center" type="index" :index="indexMethod" />
-      <el-table-column label="图书ID" align="center" prop="bookId" />
-      <el-table-column label="分类ID" align="center" prop="categoryId" />
+      <el-table-column label="图书分类" align="center" prop="name" />
       <el-table-column label="书名" align="center" prop="title" />
       <el-table-column label="作者" align="center" prop="author" />
       <el-table-column label="封面" align="center" prop="cover" width="100">
@@ -79,11 +79,7 @@
       </el-table-column>
       <el-table-column label="价格" align="center" prop="price" />
       <el-table-column label="描述" align="center" prop="description" />
-      <el-table-column label="上架时间" align="center" prop="createTime" width="180">
-        <template #default="scope">
-          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column label="上架时间" align="center" prop="createTime" width="180"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)">修改</el-button>
@@ -111,8 +107,15 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="分类ID" prop="categoryId">
-              <el-input v-model="form.categoryId" placeholder="请输入分类ID"/>
+            <el-form-item label="图书分类" prop="categoryId">
+              <!--<el-input v-model="form.categoryId" placeholder="请输入分类ID"/>-->
+              <el-select v-model="form.categoryId" placeholder="请选择图书分类">
+                <el-option v-for="category in categoryList"
+                           :key="category.categoryId"
+                           :label="category.name"
+                           :value="category.categoryId"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -155,6 +158,7 @@
 import { listBook, getBook, delBook, addBook, updateBook } from "@/api/mall/book"
 import {getToken} from "@/utils/auth.js";
 import {ElMessage, ElMessageBox} from "element-plus";
+import {selectAllCategory} from "@/api/mall/category.js";
 const baseURL = import.meta.env.VITE_APP_BASE_API
 
 const queryRef = ref()
@@ -329,8 +333,14 @@ const handleDelete = (row) => {
     ElMessage.success("删除成功")
   }).catch(() => {})
 }
+//分类列表数据
+const categoryList = ref([])
 
 onMounted(() => {
     getList()
+  //查询所有分类
+  selectAllCategory().then(res => {
+    categoryList.value = res.data
+  })
 })
 </script>
