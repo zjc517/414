@@ -51,6 +51,26 @@ export const constantRoutes = [
             component: () => import('@/views/HomePage/home'),
             hidden: true,
           },
+          {
+            path: 'books',
+            component: () => import('@/views/HomePage/books'),
+            hidden: true,
+          },
+          {
+            path: 'bookDetail/:id',
+            component: () => import('@/views/HomePage/bookDetail'),
+            hidden: true,
+          },
+          {
+            path: 'cart',
+            component: () => import('@/views/HomePage/cart'),
+            hidden: true,
+          },
+          {
+            path: 'checkout',
+            component: () => import('@/views/HomePage/checkout'),
+            hidden: true,
+          },
         ],
         hidden: true
       }

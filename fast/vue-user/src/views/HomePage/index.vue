@@ -16,6 +16,18 @@
                                 </el-icon>
                                 首页
                             </el-menu-item>
+                            <el-menu-item index="/index/books">
+                                <el-icon>
+                                    <Management/>
+                                </el-icon>
+                                所有图书
+                            </el-menu-item>
+                            <el-menu-item index="/index/cart">
+                                <el-icon>
+                                    <ShoppingCart/>
+                                </el-icon>
+                                购物车
+                            </el-menu-item>
                             <el-menu-item index="/index/profile">
                                 <el-icon>
                                     <UserFilled/>
@@ -66,7 +78,7 @@ import {useRoute, useRouter} from 'vue-router'
 import {getUser} from "@/api/system/user"
 import useUserStore from "@/store/modules/user.js";
 import {ElMessageBox} from "element-plus";
-import {HomeFilled, UserFilled} from "@element-plus/icons-vue";
+import {HomeFilled, Management, ShoppingCart, UserFilled} from "@element-plus/icons-vue";
 
 const userStore = useUserStore()
 const route = useRoute()

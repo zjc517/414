@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fast.mall.mapper.CartMapper">
+
+    <resultMap type="Cart" id="CartResult">
+        <result property="cartId"    column="cart_id"    />
+        <result property="bookId"    column="book_id"    />
+        <result property="quantity"    column="quantity"    />
+        <result property="userId"    column="user_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="title"    column="title"    />
+        <result property="author"    column="author"    />
+        <result property="cover"    column="cover"    />
+        <result property="price"    column="price"    />
+        <result property="userName"    column="user_name"    />
+    </resultMap>
+
+    <select id="selectCartList" parameterType="Cart" resultMap="CartResult">
+        select c.cart_id, c.book_id, c.quantity, c.user_id, c.create_time,
+        b.title, b.author, b.cover, b.price,
+        u.user_name
+        from cart c
+        left join book b on c.book_id = b.book_id
+        left join sys_user u on c.user_id = u.user_id
+        <where>
+            <if test="bookId != null  and bookId != ''"> and c.book_id = #{bookId}</if>
+            <if test="userId != null "> and c.user_id = #{userId}</if>
+            <if test="title != null  and title != ''">
+                and b.title like concat('%', #{title}, '%')
+            </if>
+            <if test="userName != null  and userName != ''">
+                and u.user_name like concat('%', #{userName}, '%')
+            </if>
+        </where>
+        order by c.create_time desc
+    </select>
+
+    <select id="selectCartByCartId" parameterType="String" resultMap="CartResult">
+select cart_id, book_id, quantity, user_id, create_time from cart
+        where cart_id = #{cartId}
+    </select>
+
+    <!--查询当前用户的购物车中有没有这本书-->
+    <select id="selectIsThere" resultType="java.lang.Boolean">
+        select count(cart_id)
+        from cart
+        where book_id = #{bookId} and user_id = #{userId}
+    </select>
+
+    <!--根据图书ID和用户ID查询购物车ID-->
+    <select id="selectCartIdByBookIdAndUserId" resultType="java.lang.String">
+        select cart_id
+        from cart
+        where book_id = #{bookId} and user_id = #{userId}
+    </select>
+
+    <insert id="insertCart" parameterType="Cart">
+        insert into cart
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cartId != null">cart_id,</if>
+            <if test="bookId != null and bookId != ''">book_id,</if>
+            <if test="quantity != null">quantity,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cartId != null">#{cartId},</if>
+            <if test="bookId != null and bookId != ''">#{bookId},</if>
+            <if test="quantity != null">#{quantity},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCart" parameterType="Cart">
+        update cart
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bookId != null and bookId != ''">book_id = #{bookId},</if>
+            <if test="quantity != null">quantity = #{quantity},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where cart_id = #{cartId}
+    </update>
+
+    <delete id="deleteCartByCartIds" parameterType="String">
+        delete from cart where cart_id in
+        <foreach item="cartId" collection="array" open="(" separator="," close=")">
+            #{cartId}
+        </foreach>
+    </delete>
+</mapper>
