@@ -6,4 +6,4 @@ spring:
     # 将fast换成你创建的数据库名称
     url:  jdbc:mysql://localhost:3306/fast?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8
     username: root          # 这里填你的mysql的用户名
-    password: 20040824   # 这里填你的mysql的密码
+    password:   # 这里填你的mysql的密码

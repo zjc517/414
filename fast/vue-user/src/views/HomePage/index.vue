@@ -28,10 +28,16 @@
                                 </el-icon>
                                 购物车
                             </el-menu-item>
-                            <el-menu-item index="/index/profile">
+                            <el-menu-item index="/index/recharge">
                                 <el-icon>
-                                    <UserFilled/>
+                                    <Discount/>
                                 </el-icon>
+                              账户充值
+                            </el-menu-item>
+                          <el-menu-item index="/index/profile">
+                            <el-icon>
+                              <UserFilled/>
+                            </el-icon>
                                 个人中心
                             </el-menu-item>
                         </el-menu>

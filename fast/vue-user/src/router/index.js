@@ -71,6 +71,11 @@ export const constantRoutes = [
             component: () => import('@/views/HomePage/checkout'),
             hidden: true,
           },
+            {
+            path: 'recharge' ,
+            component: () => import('@/views/HomePage/recharge'),
+            hidden: true,
+          },
         ],
         hidden: true
       }

@@ -13,7 +13,9 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -59,6 +61,40 @@ public class SysUserController extends BaseController
         List<SysRole> roles = roleService.selectRoleAll();
         ajax.put("roles", SysUser.isAdmin(userId) ? roles : roles.stream().filter(r -> !r.isAdmin()).collect(Collectors.toList()));
         return ajax;
+    }
+
+    /**
+     * 查询当前用户的账户余额
+     */
+    @GetMapping("/selectMyBalance")
+    public AjaxResult selectMyBalance() {
+        BigDecimal balance = userService.selectUserById(getUserId()).getBalance();
+        return success(balance);
+    }
+
+    /**
+     * 账户充值
+     */
+    /**
+     * 账户充值
+     */
+    /**
+     * 账户充值
+     */
+    @PutMapping("/recharge/{amount}")
+    public AjaxResult recharge(@PathVariable BigDecimal amount) {
+        //查询当前用户充值前的账户余额
+        BigDecimal oldBalance = userService.selectUserById(getUserId()).getBalance();
+
+        //计算充值后的账户余额
+        BigDecimal newBalance = oldBalance.add(amount);
+
+        //更新账户余额
+        SysUser user = new SysUser();
+        user.setUserId(getUserId());
+        user.setBalance(newBalance);
+
+        return toAjax(userService.updateUser(user));
     }
 
     /**

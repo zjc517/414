@@ -48,3 +48,22 @@ export function uploadAvatar(data) {
     data: data
   })
 }
+
+
+
+// 查询当前用户的账户余额
+export function selectMyBalance() {
+    return request({
+        url: '/system/user/selectMyBalance',
+        method: 'get'
+    })
+}
+
+// 用户充值
+export function recharge(data) {
+    return request({
+        url: '/system/user/recharge',
+        method: 'post',
+        data: data
+    })
+}

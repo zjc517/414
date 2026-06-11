@@ -155,13 +155,33 @@ const submitOrder = () => {
     ElMessage.warning('请选择收货地址')
     return
   }
-
-  //构建订单数据 TODO
+  //构建订单数据
   const item = {
-
+    totalAmount: totalPrice.value.toFixed(2),
+    name: selectedAddress.value.name,
+    phone: selectedAddress.value.phone,
+    address: selectedAddress.value.detail,
+    orderBookList: JSON.parse(route.query.products)
   }
-
+  //提取出每一个购物车ID
+  const cartIds = JSON.parse(route.query.products)
+      .map(item => item.cartId)
+      .filter(cartId => cartId !== undefined && cartId !== null)
+  addOrder(item).then(res => {
+    //只有当cartIds存在并且不为空时才清理购物车数据
+    if (cartIds && cartIds.length > 0) {
+      //清理对应的购物车数据
+      delCart(cartIds).then(response => {
+        ElMessage.success('提交成功~')
+        //跳转到订单页面 TODO
+      })
+    } else {
+      ElMessage.success('提交成功~')
+      //跳转到订单页面 TODO
+    }
+  })
 }
+
 
 //结算商品列表
 const checkoutItems = ref(getCheckoutItems())

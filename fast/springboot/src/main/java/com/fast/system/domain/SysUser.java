@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -78,6 +79,9 @@ public class SysUser extends BaseEntity {
 
     /** 角色ID */
     private Long roleId;
+
+    //账户余额
+    private BigDecimal balance;
 
     public SysUser(Long userId) {
         this.userId = userId;

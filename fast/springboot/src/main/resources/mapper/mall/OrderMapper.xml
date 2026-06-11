@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fast.mall.mapper.OrderMapper">
+
+    <resultMap type="Order" id="OrderResult">
+        <result property="orderId"    column="order_id"    />
+        <result property="totalAmount"    column="totalAmount"    />
+        <result property="name"    column="name"    />
+        <result property="phone"    column="phone"    />
+        <result property="address"    column="address"    />
+        <result property="status"    column="status"    />
+        <result property="userId"    column="user_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="userName"    column="user_name"    />
+    </resultMap>
+
+    <select id="selectOrderList" parameterType="Order" resultMap="OrderOrderBookResult">
+        select o.order_id, o.totalAmount, o.name, o.phone, o.address,
+        o.status, o.user_id, o.create_time,
+        u.user_name
+        from `order` o
+        left join sys_user u on o.user_id = u.user_id
+        <where>
+            <if test="orderId != null  and orderId != ''">
+                and o.order_id like concat('%', #{orderId}, '%')
+            </if>
+            <if test="status != null  and status != ''"> and o.status = #{status}</if>
+            <if test="userId != null and userId != ''"> and o.user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''">
+                and u.user_name like concat('%', #{userName}, '%')
+            </if>
+        </where>
+    </select>
+    <resultMap id="OrderOrderBookResult" type="Order" extends="OrderResult">
+        <collection property="orderBookList" ofType="OrderBook" column="order_id" select="selectOrderBookList" />
+    </resultMap>
+
+    <resultMap type="OrderBook" id="OrderBookResult">
+        <result property="orderBookId"    column="order_book_id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="bookId"    column="book_id"    />
+        <result property="title"    column="title"    />
+        <result property="author"    column="author"    />
+        <result property="cover"    column="cover"    />
+        <result property="price"    column="price"    />
+        <result property="quantity"    column="quantity"    />
+    </resultMap>
+
+
+    <select id="selectOrderByOrderId" parameterType="String" resultMap="OrderOrderBookResult">
+        select order_id, totalAmount, name, phone, address, status, user_id, create_time
+        from `order`
+        where order_id = #{orderId}
+    </select>
+
+    <select id="selectOrderBookList" resultMap="OrderBookResult">
+        select order_book_id, order_id, book_id, title, author, cover, price, quantity
+        from order_book
+        where order_id = #{order_id}
+    </select>
+
+    <insert id="insertOrder" parameterType="Order">
+        insert into `order`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">order_id,</if>
+            <if test="totalAmount != null">totalAmount,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="phone != null and phone != ''">phone,</if>
+            <if test="address != null and address != ''">address,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">#{orderId},</if>
+            <if test="totalAmount != null">#{totalAmount},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="phone != null and phone != ''">#{phone},</if>
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOrder" parameterType="Order">
+        update `order`
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="totalAmount != null">totalAmount = #{totalAmount},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where order_id = #{orderId}
+    </update>
+
+    <delete id="deleteOrderByOrderIds" parameterType="String">
+        delete from `order` where order_id in
+        <foreach item="orderId" collection="array" open="(" separator="," close=")">
+            #{orderId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteOrderBookByOrderIds" parameterType="String">
+        delete from order_book where order_id in
+        <foreach item="orderId" collection="array" open="(" separator="," close=")">
+            #{orderId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteOrderBookByOrderId" parameterType="String">
+        delete from order_book where order_id = #{orderId}
+    </delete>
+
+    <insert id="batchOrderBook">
+        insert into order_book( order_book_id, order_id, book_id, title, author, cover, price, quantity) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.orderBookId}, #{item.orderId}, #{item.bookId}, #{item.title}, #{item.author}, #{item.cover}, #{item.price}, #{item.quantity})
+        </foreach>
+    </insert>
+</mapper>
