@@ -1,9 +1,13 @@
 package com.fast.mall.service.impl;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+
+import com.fast.system.domain.SysUser;
+import com.fast.system.service.ISysUserService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -31,6 +35,8 @@ public class OrderServiceImpl implements IOrderService
 {
     @Resource
     private OrderMapper orderMapper;
+    @Resource
+    private ISysUserService userService;
 
     /**
      * 查询订单
@@ -56,12 +62,7 @@ public class OrderServiceImpl implements IOrderService
         return orderMapper.selectOrderList(order);
     }
 
-    /**
-     * 新增订单
-     *
-     * @param order 订单
-     * @return 结果
-     */
+
     /**
      * 新增订单
      *
@@ -118,6 +119,39 @@ public class OrderServiceImpl implements IOrderService
     }
 
     /**
+     * 付款
+     * @param orderId 订单ID
+     * @return 是否付款成功
+     */
+    @Override
+    @Transactional
+    public int payment(String orderId) {
+        //该订单需要支付的金额
+        BigDecimal totalAmount = orderMapper.selectOrderByOrderId(orderId).getTotalAmount();
+        //当前用户的账户余额
+        BigDecimal oldBalance = userService.selectUserById(getUserId()).getBalance();
+        //对比余额是否小于金额
+        if (oldBalance.compareTo(totalAmount) < 0) {
+            //余额不足的处理逻辑
+            throw new RuntimeException("余额不足, 当前余额: " + oldBalance + "需支付: " + totalAmount);
+        }
+        //余额充足, 进行扣费
+        BigDecimal newBalance = oldBalance.subtract(totalAmount);
+        //更新用户余额
+        SysUser user = new SysUser();
+        user.setUserId(getUserId());
+        user.setBalance(newBalance);
+        userService.updateUser(user);
+        //将订单状态修改为待发货
+        List<OrderBook> orderBookList = orderMapper.selectOrderByOrderId(orderId).getOrderBookList();
+        Order order = new Order();
+        order.setOrderId(orderId);
+        order.setStatus("待发货");
+        order.setOrderBookList(orderBookList);
+        return orderMapper.updateOrder(order);
+    }
+
+    /**
      * 新增订单图书信息
      *
      * @param order 订单对象
@@ -140,4 +174,6 @@ public class OrderServiceImpl implements IOrderService
             }
         }
     }
+
+
 }

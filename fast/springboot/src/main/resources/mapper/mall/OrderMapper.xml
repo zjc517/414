@@ -32,6 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 and u.user_name like concat('%', #{userName}, '%')
             </if>
         </where>
+        order by o.create_time desc
     </select>
     <resultMap id="OrderOrderBookResult" type="Order" extends="OrderResult">
         <collection property="orderBookList" ofType="OrderBook" column="order_id" select="selectOrderBookList" />

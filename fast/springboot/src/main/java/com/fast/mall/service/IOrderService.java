@@ -50,4 +50,11 @@ public interface IOrderService
      * @return 结果
      */
     public int deleteOrderByOrderIds(String[] orderIds);
+
+    /**
+     * 付款
+     * @param orderId 订单ID
+     * @return 是否付款成功
+     */
+    int payment(String orderId);
 }

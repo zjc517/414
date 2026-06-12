@@ -106,7 +106,9 @@ import {onMounted, ref} from 'vue'
 import {addAddress, delAddress, getAddress, selectMyAddress, updateAddress} from "@/api/mall/address.js";
 import {Plus} from "@element-plus/icons-vue";
 import {ElMessage, ElMessageBox} from "element-plus";
-import {useRoute} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
+import {addOrder} from "@/api/mall/order.js";
+import {delCart} from "@/api/mall/cart.js";
 
 //基础API地址
 const baseUrl = import.meta.env.VITE_APP_BASE_API
@@ -148,6 +150,9 @@ const getCheckoutItems = () => {
   return JSON.parse(route.query.products)
 }
 
+//路由实例
+const router = useRouter()
+
 //提交订单
 const submitOrder = () => {
   //验证是否选择了收货地址
@@ -167,17 +172,20 @@ const submitOrder = () => {
   const cartIds = JSON.parse(route.query.products)
       .map(item => item.cartId)
       .filter(cartId => cartId !== undefined && cartId !== null)
+
   addOrder(item).then(res => {
     //只有当cartIds存在并且不为空时才清理购物车数据
     if (cartIds && cartIds.length > 0) {
       //清理对应的购物车数据
       delCart(cartIds).then(response => {
         ElMessage.success('提交成功~')
-        //跳转到订单页面 TODO
+        //跳转到订单页面
+        router.push('/index/order')
       })
     } else {
       ElMessage.success('提交成功~')
-      //跳转到订单页面 TODO
+      //跳转到订单页面
+      router.push('/index/order')
     }
   })
 }

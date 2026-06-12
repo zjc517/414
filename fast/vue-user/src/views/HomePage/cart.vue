@@ -79,7 +79,7 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from 'vue'
+import {onMounted, ref, computed} from 'vue'
 import {delCart, selectMyCartList, updateCart} from "@/api/mall/cart.js";
 import {useRouter} from "vue-router";
 

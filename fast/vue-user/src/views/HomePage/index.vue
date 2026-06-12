@@ -28,6 +28,12 @@
                                 </el-icon>
                                 购物车
                             </el-menu-item>
+                          <el-menu-item index="/index/order">
+                            <el-icon>
+                              <DocumentAdd/>
+                            </el-icon>
+                            我的订单
+                          </el-menu-item>
                             <el-menu-item index="/index/recharge">
                                 <el-icon>
                                     <Discount/>

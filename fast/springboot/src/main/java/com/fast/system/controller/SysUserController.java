@@ -72,29 +72,43 @@ public class SysUserController extends BaseController
         return success(balance);
     }
 
-    /**
-     * 账户充值
-     */
-    /**
-     * 账户充值
-     */
-    /**
-     * 账户充值
-     */
-    @PutMapping("/recharge/{amount}")
-    public AjaxResult recharge(@PathVariable BigDecimal amount) {
-        //查询当前用户充值前的账户余额
-        BigDecimal oldBalance = userService.selectUserById(getUserId()).getBalance();
 
-        //计算充值后的账户余额
+    /**
+     * 账户充值
+     */
+    @PostMapping("/recharge")
+    public AjaxResult recharge(@RequestBody Map<String, Object> params) {
+        // 获取充值金额
+        BigDecimal amount = new BigDecimal(params.get("amount").toString());
+
+        // 验证金额
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            return error("充值金额必须大于0");
+        }
+
+        // 查询当前用户充值前的账户余额
+        SysUser currentUser = userService.selectUserById(getUserId());
+        BigDecimal oldBalance = currentUser.getBalance();
+
+        // 计算充值后的账户余额
         BigDecimal newBalance = oldBalance.add(amount);
 
-        //更新账户余额
+        // 更新账户余额
         SysUser user = new SysUser();
         user.setUserId(getUserId());
         user.setBalance(newBalance);
 
-        return toAjax(userService.updateUser(user));
+        int result = userService.updateUser(user);
+
+        if (result > 0) {
+            AjaxResult ajax = success("充值成功");
+            ajax.put("oldBalance", oldBalance);
+            ajax.put("newBalance", newBalance);
+            ajax.put("amount", amount);
+            return ajax;
+        } else {
+            return error("充值失败");
+        }
     }
 
     /**

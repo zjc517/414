@@ -71,4 +71,22 @@ public class OrderController extends BaseController {
     public AjaxResult remove(@PathVariable String[] orderIds) {
         return toAjax(orderService.deleteOrderByOrderIds(orderIds));
     }
+    /**
+     * 查询用户个人的订单列表
+     */
+    @GetMapping("/selectMyOrderList")
+    public TableDataInfo selectMyOrderList(Order order) {
+        order.setUserId(getUserId());
+        startPage();
+        List<Order> list = orderService.selectOrderList(order);
+        return getDataTable(list);
+    }
+
+    /**
+     * 付款
+     */
+    @PutMapping("/payment/{orderId}")
+    public AjaxResult payment(@PathVariable String orderId) {
+        return toAjax(orderService.payment(orderId));
+    }
 }

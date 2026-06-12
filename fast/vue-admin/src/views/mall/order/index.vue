@@ -69,7 +69,13 @@
               border v-loading="loading" :data="orderList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" align="center" type="index" :index="indexMethod" />
-      <el-table-column label="订单号" align="center" prop="orderId" />
+      <el-table-column label="订单号" align="center" prop="orderId" width="200">
+        <template #default="scope">
+          <el-link type="primary" @click="goToDetail(scope.row.orderId)">
+            {{ scope.row.orderId }}
+          </el-link>
+        </template>
+      </el-table-column>
       <el-table-column label="订单总价" align="center" prop="totalAmount" />
       <el-table-column label="收货人" align="center" prop="name" />
       <el-table-column label="联系电话" align="center" prop="phone" />
@@ -168,6 +174,8 @@
         </div>
       </template>
     </vxe-modal>
+    <!-- 订单详情组件 -->
+    <OrderDetail ref="orderDetail"/>
   </div>
 </template>
 
@@ -175,6 +183,7 @@
 import { listOrder, getOrder, delOrder, addOrder, updateOrder } from "@/api/mall/order"
 import {getToken} from "@/utils/auth.js";
 import {ElMessage, ElMessageBox} from "element-plus";
+import OrderDetail from "@/views/mall/order/OrderDetail.vue";
 const baseURL = import.meta.env.VITE_APP_BASE_API
 
 const queryRef = ref()
@@ -226,7 +235,12 @@ const data = reactive({
 })
 
 const { queryParams, form, rules } = toRefs(data)
-
+//订单详情组件实例
+const orderDetail = ref()
+//打开订单详情组件
+const goToDetail = (orderId) => {
+  orderDetail.value.handleOpen(orderId)
+}
 //点击行 获取行
 const clickRow = (row) => {
   selectedRow.value = row; // 更新选中的行
