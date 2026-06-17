@@ -56,7 +56,7 @@
             <div class="product-quantity">×{{ item.quantity }}</div>
             <div class="product-total">¥{{ (item.price * item.quantity).toFixed(2) }}</div>
             <div class="product-actions" v-if="order.status === '已完成'">
-              <el-button type="success" size="small" @click.stop="">
+              <el-button type="success" size="small" @click.stop="evaluateBook(item)">
                 图书评价
               </el-button>
             </div>
@@ -104,6 +104,24 @@
       </div>
     </div>
 
+    <!-- 评价对话框 -->
+    <vxe-modal title="图书评价" v-model="open" width="500px" show-maximize showFooter resize>
+      <el-form ref="evaluateRef" :model="form" label-width="80px">
+        <el-form-item label="评分" prop="rating">
+          <el-rate v-model="form.rating"/>
+        </el-form-item>
+        <el-form-item label="评价内容" prop="content">
+          <el-input v-model="form.content" type="textarea" placeholder="请输入内容"/>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button type="primary" @click="submitForm">确 定</el-button>
+          <el-button @click="open = false">取 消</el-button>
+        </div>
+      </template>
+    </vxe-modal>
+
 
   </div>
 </template>
@@ -114,6 +132,7 @@ import {payment, selectMyOrderList, updateOrder} from "@/api/mall/order.js";
 import {useRouter} from "vue-router";
 import {Document} from "@element-plus/icons-vue";
 import {ElMessage, ElMessageBox} from "element-plus";
+import {addEvaluate} from "@/api/mall/evaluate.js";
 
 //基础API地址
 const baseUrl = import.meta.env.VITE_APP_BASE_API
@@ -135,6 +154,42 @@ const query = ref({
 const total = ref(0)
 
 const router = useRouter()
+
+//评价表单参数
+const form = ref({
+  bookId: null,
+  rating: null,
+  content: null
+})
+//要评价的图书
+const currentBook = ref(null)
+
+//评价对话框是否打开
+const open = ref(false)
+//图书评价
+const evaluateBook = (book) => {
+  currentBook.value = book
+  open.value = true
+  //重置表单
+  form.value = {
+    bookId: null,
+    rating: null,
+    content: null
+  }
+}
+
+//提交评价
+const submitForm = () => {
+  const item = {
+    bookId: currentBook.value.bookId,
+    rating: form.value.rating,
+    content: form.value.content
+  }
+  addEvaluate(item).then(res => {
+    ElMessage.success('评价提交成功')
+    open.value = false
+  })
+}
 
 //确认收货
 const receive = (order) => {

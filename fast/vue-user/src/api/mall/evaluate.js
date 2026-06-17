@@ -42,3 +42,11 @@ export function delEvaluate(evaluateId) {
     method: 'delete'
   })
 }
+
+// 根据图书ID查询评价列表
+export function selectEvaluateListByBookId(bookId) {
+  return request({
+    url: '/mall/evaluate/selectEvaluateListByBookId/' + bookId,
+    method: 'get'
+  })
+}

@@ -71,4 +71,15 @@ public class EvaluateController extends BaseController {
     public AjaxResult remove(@PathVariable String[] evaluateIds) {
         return toAjax(evaluateService.deleteEvaluateByEvaluateIds(evaluateIds));
     }
+
+    /**
+     * 根据图书ID查询评价列表
+     */
+    @GetMapping("/selectEvaluateListByBookId/{bookId}")
+    public AjaxResult selectEvaluateListByBookId(@PathVariable String bookId) {
+    Evaluate evaluate = new Evaluate();
+    evaluate.setBookId(bookId);
+    List<Evaluate> list = evaluateService.selectEvaluateList(evaluate);
+    return success(list);
+    }
 }

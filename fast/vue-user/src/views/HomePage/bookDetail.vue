@@ -3,7 +3,9 @@
     <!-- 返回按钮 -->
     <div class="return-button">
       <el-button @click="router.go(-1)">
-        <el-icon><ArrowLeft/></el-icon>
+        <el-icon>
+          <ArrowLeft/>
+        </el-icon>
         返回
       </el-button>
     </div>
@@ -33,7 +35,9 @@
 
         <div class="book-actions">
           <el-button color="#2c3e50" size="large" class="cart-btn" @click="addToCart()">
-            <el-icon><shopping-cart/></el-icon>
+            <el-icon>
+              <shopping-cart/>
+            </el-icon>
             加入购物车
           </el-button>
           <el-button type="primary" size="large" class="buy-btn" @click="">
@@ -49,8 +53,19 @@
       </div>
     </div>
 
-    <!-- 用户评价区域 TODO -->
-
+    <!-- 用户评价区域 -->
+    <div class="book-details-section" v-if="evaluateList.length > 0">
+      <div v-for="review in evaluateList"
+           :key="review.evaluateId"
+           class="review-item">
+        <div class="review-header">
+          <span class="userName">{{ review.userName }}</span>
+          <el-rate v-model="review.rating" disabled size="large"/>
+        </div>
+        <p class="review-content">{{ review.content }}</p>
+        <div class="review-date">{{ review.createTime }}</div>
+      </div>
+    </div>
 
   </div>
 </template>
@@ -61,6 +76,7 @@ import {ArrowLeft, ShoppingCart} from "@element-plus/icons-vue";
 import {getBook} from "@/api/mall/book.js";
 import {addCart} from "@/api/mall/cart.js";
 import {ElMessage} from "element-plus";
+import {selectEvaluateListByBookId} from "@/api/mall/evaluate.js";
 
 //基础API地址
 const baseUrl = import.meta.env.VITE_APP_BASE_API
@@ -83,11 +99,20 @@ const addToCart = () => {
 //图书信息
 const book = ref({})
 
+//评价列表
+const evaluateList = ref([])
+
 onMounted(() => {
   //根据图书ID查询图书信息
   getBook(route.params.id).then(res => {
     book.value = res.data
   })
+
+  //根据图书ID查询评价列表
+  selectEvaluateListByBookId(route.params.id).then(res => {
+    evaluateList.value = res.data
+  })
+
 })
 
 </script>
