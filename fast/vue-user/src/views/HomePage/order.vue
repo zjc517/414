@@ -86,7 +86,7 @@
             <el-button v-if="order.status === '已发货'"
                        type="primary"
                        size="small"
-                       @click="receive(order)"
+                       @click=""
             >
               确认收货
             </el-button>
@@ -135,25 +135,6 @@ const query = ref({
 const total = ref(0)
 
 const router = useRouter()
-
-//确认收货
-const receive = (order) => {
-  const item = {
-    orderId: order.orderId,
-    status: '已完成',
-    orderBookList: order.orderBookList
-  }
-  ElMessageBox.confirm('确定已经收到货了吗？', '系统提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  }).then(() => {
-    updateOrder(item).then(res => {
-      getList()
-      ElMessage.success('成功完成订单')
-    })
-  })
-}
 
 //付款
 const payOrder = (order) => {

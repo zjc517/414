@@ -97,9 +97,8 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
-          <el-button v-if="scope.row.status === '待发货'" type="success" @click="handleShipment(scope.row)">
-            发货
-          </el-button>
+          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)">修改</el-button>
+          <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -238,26 +237,6 @@ const data = reactive({
 const { queryParams, form, rules } = toRefs(data)
 //订单详情组件实例
 const orderDetail = ref()
-
-//发货
-const handleShipment = (row) => {
-  const item = {
-    orderId: row.orderId,
-    status: '已发货',
-    orderBookList: row.orderBookList
-  }
-  ElMessageBox.confirm('确定要发货吗？', '系统提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  }).then(() => {
-    updateOrder(item).then(res => {
-      getList()
-      ElMessage.success('发货成功~')
-    })
-  })
-}
-
 //打开订单详情组件
 const goToDetail = (orderId) => {
   orderDetail.value.handleOpen(orderId)
