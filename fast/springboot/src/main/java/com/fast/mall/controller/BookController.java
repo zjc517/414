@@ -3,6 +3,7 @@ package com.fast.mall.controller;
 import java.util.List;
 
 import jakarta.annotation.Resource;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -70,5 +71,44 @@ public class BookController extends BaseController {
     @DeleteMapping("/{bookIds}")
     public AjaxResult remove(@PathVariable String[] bookIds) {
         return toAjax(bookService.deleteBookByBookIds(bookIds));
+    }
+
+    /**
+     * 图书推荐
+     */
+    @PutMapping("/recommend/{bookId}")
+    @Transactional
+    public AjaxResult recommend(@PathVariable String bookId) {
+        // 1. 查询是否已有推荐的图书
+        Boolean recommendBoolean = bookService.selectIsRecommend();
+
+        // 2. 如果有推荐图书，先取消之前的推荐
+        // 使用 Boolean.TRUE.equals() 安全处理 null
+        if (Boolean.TRUE.equals(recommendBoolean)) {
+            // 查询之前已经推荐的图书ID
+            String oldRecommendBookId = bookService.selectBookIdByIsRecommend();
+            if (oldRecommendBookId != null && !oldRecommendBookId.isEmpty()) {
+                Book oldRecommendBook = new Book();
+                oldRecommendBook.setBookId(oldRecommendBookId);
+                oldRecommendBook.setIsRecommend(false);
+                bookService.updateBook(oldRecommendBook);
+            }
+        }
+
+        // 3. 设置当前图书为推荐
+        Book book = new Book();
+        book.setBookId(bookId);
+        book.setIsRecommend(true);
+
+        // 4. 更新并返回结果
+        int result = bookService.updateBook(book);
+        return toAjax(result);
+    }
+
+    //查询推荐的图书
+    @GetMapping("/selectRecommendBook")
+    public AjaxResult selectRecommendBook() {
+        Book book = bookService.selectRecommendBook();
+        return success(book);
     }
 }

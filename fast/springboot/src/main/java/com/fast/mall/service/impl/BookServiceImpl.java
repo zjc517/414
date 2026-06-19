@@ -87,4 +87,28 @@ public class BookServiceImpl implements IBookService
     {
         return bookMapper.deleteBookByBookIds(bookIds);
     }
+
+    @Override
+    public Boolean selectIsRecommend() {
+        return null;
+    }
+
+    /**
+     * 查询之前已经推荐的图书ID
+     * @return 图书ID
+     */
+    @Override
+    public String selectBookIdByIsRecommend() {
+        return bookMapper.selectBookIdByIsRecommend();
+    }
+
+    /**
+     * 查询推荐的图书
+     * @return 图书信息
+     */
+    @Override
+    public Book selectRecommendBook() {
+        return bookMapper.selectRecommendBook();
+    }
 }
+

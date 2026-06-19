@@ -37,8 +37,16 @@ export function updateBook(data) {
 
 // 删除图书
 export function delBook(bookId) {
-  return request({
-    url: '/mall/book/' + bookId,
-    method: 'delete'
-  })
+    return request({
+        url: '/mall/book/' + bookId,
+        method: 'delete'
+    })
+}
+
+// 图书推荐
+export function recommend(bookId) {
+    return request({
+        url: '/mall/book/recommend/' + bookId,
+        method: 'put'
+    })
 }

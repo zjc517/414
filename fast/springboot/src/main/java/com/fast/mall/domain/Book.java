@@ -45,5 +45,8 @@ public class Book
     //图书分类
     private String name;
 
+    //是否推荐
+    private Boolean isRecommend;
+
 
 }

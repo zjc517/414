@@ -42,3 +42,11 @@ export function delBook(bookId) {
     method: 'delete'
   })
 }
+
+// 查询推荐的图书
+export function selectRecommendBook() {
+    return request({
+        url: '/mall/book/selectRecommendBook',
+        method: 'get'
+    })
+}

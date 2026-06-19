@@ -80,6 +80,13 @@
       <el-table-column label="价格" align="center" prop="price" />
       <el-table-column label="描述" align="center" prop="description" />
       <el-table-column label="上架时间" align="center" prop="createTime" width="180"/>
+      <el-table-column label="推荐" align="center" class-name="small-padding fixed-width">
+        <template #default="scope">
+          <el-button v-if="!scope.row.isRecommend" type="primary" @click="recommendBook(scope.row)">
+            图书推荐
+          </el-button>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)">修改</el-button>
@@ -155,7 +162,7 @@
 </template>
 
 <script setup name="Book">
-import { listBook, getBook, delBook, addBook, updateBook } from "@/api/mall/book"
+import { listBook, getBook, delBook, addBook, updateBook, recommend } from "@/api/mall/book"
 import {getToken} from "@/utils/auth.js";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {selectAllCategory} from "@/api/mall/category.js";
@@ -207,6 +214,14 @@ const data = reactive({
 })
 
 const { queryParams, form, rules } = toRefs(data)
+
+//图书推荐
+const recommendBook = (row) => {
+  recommend(row.bookId).then(res => {
+    getList()
+    ElMessage.success('推荐成功~')
+  })
+}
 
 //点击行 获取行
 const clickRow = (row) => {

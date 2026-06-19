@@ -52,4 +52,22 @@ public interface BookMapper
      * @return 结果
      */
     public int deleteBookByBookIds(String[] bookIds);
+
+    /**
+     * 查询之前是否已经有推荐的图书
+     * @return 是否已经有推荐的图书
+     */
+    Boolean selectIsRecommend();
+
+    /**
+     * 查询之前已经推荐的图书ID
+     * @return 图书ID
+     */
+    String selectBookIdByIsRecommend();
+
+    /**
+     * 查询推荐的图书
+     * @return 图书信息
+     */
+    Book selectRecommendBook();
 }

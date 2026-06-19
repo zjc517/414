@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fast.mall.mapper.BookMapper">
 
     <resultMap type="Book" id="BookResult">
@@ -14,10 +14,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="description"    column="description"    />
         <result property="createTime"    column="create_time"    />
         <result property="name"    column="name"    />
+        <result property="isRecommend"    column="is_recommend"    />
     </resultMap>
 
     <select id="selectBookList" parameterType="Book" resultMap="BookResult">
-        select b.book_id, b.category_id, b.title, b.author, b.cover, b.price, b.description, b.create_time,
+        select b.book_id, b.category_id, b.title, b.author, b.cover, b.price,
+        b.description, b.create_time, b.is_recommend,
         c.name
         from book b
         left join category c on b.category_id = c.category_id
@@ -30,8 +32,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectBookByBookId" parameterType="String" resultMap="BookResult">
-select book_id, category_id, title, author, cover, price, description, create_time from book
+        select book_id, category_id, title, author, cover, price, description, create_time, is_recommend from book
         where book_id = #{bookId}
+    </select>
+
+    <!--查询之前是否已经有推荐的图书-->
+    <select id="selectIsRecommend" resultType="java.lang.Boolean">
+        select count(book_id)
+        from book
+        where is_recommend = true
+    </select>
+
+    <!--查询之前已经推荐的图书ID-->
+    <select id="selectBookIdByIsRecommend" resultType="java.lang.String">
+        select book_id
+        from book
+        where is_recommend = true
+    </select>
+
+    <!--查询推荐的图书-->
+    <select id="selectRecommendBook" resultMap="BookResult">
+        select book_id, category_id, title, author, cover, price, description,
+               create_time, is_recommend from book
+        where is_recommend = true
     </select>
 
     <insert id="insertBook" parameterType="Book">
@@ -45,7 +68,7 @@ select book_id, category_id, title, author, cover, price, description, create_ti
             <if test="price != null">price,</if>
             <if test="description != null and description != ''">description,</if>
             <if test="createTime != null">create_time,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="bookId != null">#{bookId},</if>
             <if test="categoryId != null and categoryId != ''">#{categoryId},</if>
@@ -55,7 +78,7 @@ select book_id, category_id, title, author, cover, price, description, create_ti
             <if test="price != null">#{price},</if>
             <if test="description != null and description != ''">#{description},</if>
             <if test="createTime != null">#{createTime},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateBook" parameterType="Book">
@@ -68,6 +91,7 @@ select book_id, category_id, title, author, cover, price, description, create_ti
             <if test="price != null">price = #{price},</if>
             <if test="description != null and description != ''">description = #{description},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="isRecommend != null">is_recommend = #{isRecommend},</if>
         </trim>
         where book_id = #{bookId}
     </update>
