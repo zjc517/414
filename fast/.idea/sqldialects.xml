@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/../../../A课件/2025-2026 II 软件工程项目实训/实验项目/book-mall/book-mall.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/../../../数据库/fast(2).sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/../../../数据库/fast.sql" dialect="MySQL" />
+  </component>
+</project>
