@@ -1,6 +1,8 @@
 package com.fast.mall.mapper;
 
 import java.util.List;
+
+import com.fast.mall.domain.vo.BookTopFiveVO;
 import org.apache.ibatis.annotations.Mapper;
 import com.fast.mall.domain.Book;
 
@@ -70,4 +72,10 @@ public interface BookMapper
      * @return 图书信息
      */
     Book selectRecommendBook();
+
+    /**
+     * 查询销售数量前5的图书以及销售额
+     * @return 销售图书列表
+     */
+    List<BookTopFiveVO> selectTopFiveBooks();
 }

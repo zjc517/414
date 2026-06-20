@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.fast.mall.domain.vo.BookTopFiveVO;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import com.fast.mall.mapper.BookMapper;
@@ -90,7 +91,7 @@ public class BookServiceImpl implements IBookService
 
     @Override
     public Boolean selectIsRecommend() {
-        return null;
+        return bookMapper.selectIsRecommend();
     }
 
     /**
@@ -109,6 +110,15 @@ public class BookServiceImpl implements IBookService
     @Override
     public Book selectRecommendBook() {
         return bookMapper.selectRecommendBook();
+    }
+
+    /**
+     * 查询销售数量前5的图书以及销售额
+     * @return 销售图书列表
+     */
+    @Override
+    public List<BookTopFiveVO> selectTopFiveBooks() {
+        return bookMapper.selectTopFiveBooks();
     }
 }
 

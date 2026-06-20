@@ -2,6 +2,7 @@ package com.fast.mall.service;
 
 import java.util.List;
 import com.fast.mall.domain.Book;
+import com.fast.mall.domain.vo.BookTopFiveVO;
 
 /**
  * 图书Service接口
@@ -68,5 +69,11 @@ public interface IBookService
      * @return 图书信息
      */
     Book selectRecommendBook();
+
+    /**
+     * 查询销售数量前5的图书以及销售额
+     * @return 销售图书列表
+     */
+    List<BookTopFiveVO> selectTopFiveBooks();
 
 }

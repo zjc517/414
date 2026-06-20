@@ -2,6 +2,7 @@ package com.fast.mall.controller;
 
 import java.util.List;
 
+import com.fast.mall.domain.vo.BookTopFiveVO;
 import jakarta.annotation.Resource;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -99,10 +100,7 @@ public class BookController extends BaseController {
         Book book = new Book();
         book.setBookId(bookId);
         book.setIsRecommend(true);
-
-        // 4. 更新并返回结果
-        int result = bookService.updateBook(book);
-        return toAjax(result);
+        return toAjax(bookService.updateBook(book));
     }
 
     //查询推荐的图书
@@ -110,5 +108,12 @@ public class BookController extends BaseController {
     public AjaxResult selectRecommendBook() {
         Book book = bookService.selectRecommendBook();
         return success(book);
+    }
+
+    //查询销售数量前5的图书以及销售额
+    @GetMapping("/selectTopFiveBooks")
+    public AjaxResult selectTopFiveBooks() {
+        List<BookTopFiveVO> list = bookService.selectTopFiveBooks();
+        return success(list);
     }
 }

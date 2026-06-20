@@ -57,6 +57,18 @@
         where is_recommend = true
     </select>
 
+    <!--查询销售数量前5的图书以及销售额-->
+    <select id="selectTopFiveBooks" resultType="com.fast.mall.domain.vo.BookTopFiveVO">
+        select b.title, sum(ob.quantity) as total
+        from order_book ob
+                 inner join book b on ob.book_id = b.book_id
+                 inner join `order` o on ob.order_id = o.order_id
+        where o.status = '已完成'
+        group by b.book_id
+        order by total desc
+            limit 5
+    </select>
+
     <insert id="insertBook" parameterType="Book">
         insert into book
         <trim prefix="(" suffix=")" suffixOverrides=",">

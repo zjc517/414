@@ -50,3 +50,11 @@ export function selectRecommendBook() {
         method: 'get'
     })
 }
+
+// 查询销售数量前5的图书以及销售额
+export function selectTopFiveBooks() {
+  return request({
+    url: '/mall/book/selectTopFiveBooks',
+    method: 'get'
+  })
+}
